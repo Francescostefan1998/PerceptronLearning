@@ -1,61 +1,64 @@
-import time
 import numpy as np
 
+class Perceptron:
+    """Perceptron classifier.
+    Parameters
+    ----------
+    eta : float
+        Learning rate (betwen 0.0 and 1.0)
+    n_iter : int
+        Passes over the training dataset.
+    random_state : int
+        Random number generator seed for random weight inititalization.
+    Attributes
+    ----------
+    w_ : 1d-array
+        Weights after fitting.
+    b_ : Scalar
+        Bias unit after fitting.
+    errors_ : list
+        Number of misclassifactions (updates) in each epoch.
 
-# https://sebastianraschaka.com/pdf/lecture-notes/stat453ss21/L03_perceptron_slides.pdf
-# https://sebastianraschka.com/blog/2020/numpy-intro.html
-# https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html
-# https://matplotlib.org/stable/tutorials/introductory/usage.html
-def python_forloop_list_approach(x, w):
-    z = 0.
-    for i in range(len(x)):
-        z+= x[i] * w[i]
-    return z
+    """
 
-a = [1., 2., 3.]
-b = [4., 5., 6.]
+    def __init__(self, eta=0.01, n_iter=50, random_state=1):
+        self.eta = eta
+        self.n_iter = n_iter
+        self.random_state = random_state
+    
+    def fit(self, X, y):
+        """Fit training data
+        Parameters
+        ----------
+        X : {array-like}, shape= [n_examples, n_features]
+            Training vectors, where n_examples is the number of examples and n_features is the number of features.
+        y : array-like, shape = [n_examples]
+            Target values.
+        Returns
+        -------
+        self : object
+        """
+        rgen = np.random.RandomState(self.random_state)
+        self.w_ = rgen.normal(loc=0.0, scale=0.01,
+                              size=X.shape[1])
+        self.b_ = np.float_(0.)
+        self.errors_ = []
 
-start_time = time.time()  # Start the timer
-result = python_forloop_list_approach(a, b)
-end_time = time.time()    # End the timer
+        for _ in range(self.n_iter):
+            errors = 0
+            for xi, target in zip(X,y):
+                update = self.eta * (target - self.predict(xi))
+                self.w_+=update*xi
+                self.b_ += update
+                errors += int(update != 0.0)
+            self.errors_.append(errors)
+        return self
+    
+    def net_input(self, X):
+        """Calculate net input"""
+        return np.dot(X, self.w_) + self.b_
 
-print(f"Result: {result}")
-print(f"Execution time: {end_time - start_time:.6f} seconds")
+    def predict(self, X):
+        """Return class label after unit step"""
+        return np.where(self.net_input(X) >= 0.0, 1, 0)
 
-large_a = list(range(1000))
-large_b = list(range(1000))
-
-# Measuring execution time for large inputs
-start_time = time.time()  # Start the timer
-result = python_forloop_list_approach(large_a, large_b)
-end_time = time.time()    # End the timer
-
-print(f"Result: {result}")
-print(f"Execution time for large inputs: {end_time - start_time:.6f} seconds")
-
-def numpy_dotproduct_approach(x, w):
-    # np.dot(x, w)
-    return x.dot(w)
-
-a = np.array([1., 2., 3.])
-b = np.array([4., 5., 6.])
-
-# Measuring execution time with numpy
-start_time = time.time()  # Start the timer
-result = numpy_dotproduct_approach(a, b)
-end_time = time.time()    # End the timer
-
-print(f"Result: {result}")
-print(f"Execution time for large inputs: {end_time - start_time:.6f} seconds")
-
-# Convert large lists to NumPy arrays
-large_a_np = np.array(large_a)
-large_b_np = np.array(large_b)
-
-# Measuring execution time with numpy but big array
-start_time = time.time()  # Start the timer
-result = numpy_dotproduct_approach(large_a_np, large_b_np)
-end_time = time.time()    # End the timer
-
-print(f"Result: {result}")
-print(f"Execution time for large inputs: {end_time - start_time:.6f} seconds")
