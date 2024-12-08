@@ -40,7 +40,7 @@ class Perceptron:
         """
         rgen = np.random.RandomState(self.random_state) 
         self.w_ = rgen.normal(loc=0.0, scale=0.01, size=X.shape[1])
-        self.b_ = np.float_(0.)
+        self.b_ = np.float64(0.)
         self.errors_ = []
 
         for _ in range(self.n_iter):
@@ -55,7 +55,7 @@ class Perceptron:
     
     def net_input(self, X):
         """Calculate net input"""
-        return np.dot(X, self.w_) + self.b_
+        return np.dot(X, self.w_) + self.b_ # this does the core calculation w(t)x plus b
 
     def predict(self, X):
         """Return class label after unit step"""
