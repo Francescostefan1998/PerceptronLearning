@@ -38,9 +38,8 @@ class Perceptron:
         -------
         self : object
         """
-        rgen = np.random.RandomState(self.random_state)
-        self.w_ = rgen.normal(loc=0.0, scale=0.01,
-                              size=X.shape[1])
+        rgen = np.random.RandomState(self.random_state) 
+        self.w_ = rgen.normal(loc=0.0, scale=0.01, size=X.shape[1])
         self.b_ = np.float_(0.)
         self.errors_ = []
 
