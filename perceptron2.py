@@ -17,7 +17,7 @@ class Perceptron2:
                 update = self.eta * (target - self.predict(xi))
                 print(f"Sample {xi}, Target: {target}, Predict : {self.predict(xi)},  Update: {update}")
                 print(f"Initial weight : {self.w_}")
-                self.w_ += update * xi
+                self.w_ += update * xi # be careful here is a += not just + not just = 
                 print(f"Updated weight : {self.w_}")
                 print(f"Initial bias : {self.b_}")
                 self.b_ += update
