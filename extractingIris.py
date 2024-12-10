@@ -72,3 +72,9 @@ def plot_decision_regions(X, y, classifier, resolution = 0.02):
                     label=f'Class {cl}',
                     edgecolor='black')
                     
+
+plot_decision_regions(X, y, classifier=ppn)
+plt.xlabel('Sepal length [cm]')
+plt.ylabel('Petal length [cm]')
+plt.legend(loc='upper left')
+plt.show()
